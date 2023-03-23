@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Security.Cryptography;
 
-namespace FrisExtras;
+namespace FrisExtras.Secrets;
 
 /// <summary>
 /// Generate cryptographically strong pseudo-random numbers suitable for
