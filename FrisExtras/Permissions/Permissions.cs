@@ -1,3 +1,6 @@
+using System.Runtime.InteropServices;
+using System.Security.Principal;
+
 namespace FrisExtras.Permissions;
 
 /// <summary>
@@ -31,5 +34,24 @@ public class Permissions
                 throw;
             return false;
         }
+    }
+
+    
+    
+    [DllImport("libc")]
+    private static extern uint getuid();
+
+    /// <summary>
+    /// Checks if the program is run with elevated privileges.
+    /// Taken from https://stackoverflow.com/a/49373723
+    /// </summary>
+    /// <returns><c>True</c> if run with elevated privileges. Otherwise <c>False</c>.</returns>
+    public static bool IsRoot()
+    {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return getuid() == 0;
+        using var identity = WindowsIdentity.GetCurrent();
+        var principal = new WindowsPrincipal(identity);
+        var isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+        return isAdmin;
     }
 }
